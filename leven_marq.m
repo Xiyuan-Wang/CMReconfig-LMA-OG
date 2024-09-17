@@ -5,12 +5,12 @@ function [Mr, varargout] = leven_marq(M, W, varargin)
     %   [Mr, varargout] = LEVEN_MARQ(M, W, varargin) performs the
     %   Levenberg-Marquardt optimization on orthogonal matrices for
     %   reconfiguration of the input coupling matrix M with structure
-    %   specified by weight matrix W.
+    %   specified by the binary weight matrix W.
     %   Additional options can be provided via varargin.
     %
     %   Inputs:
     %       M - Input coupling matrix.
-    %       W - Weight matrix recording filter structure.
+    %       W - Binary weight matrix whose nonzero elements mark the couplings to be reduced.
     %       varargin - Additional options as a struct.
     %
     %   Outputs:
@@ -156,13 +156,13 @@ function obj_val = obj(U, M, W)
     % OBJ Compute the objective function value.
     %
     %   obj_val = OBJ(U, M, W) computes the objective function value for
-    %   the given transformation matrix U, input matrix M, and weight
+    %   the given transformation matrix U, input matrix M, and binary weight
     %   matrix W.
     %
     %   Inputs:
     %       U - Transformation matrix.
-    %       M - Input matrix.
-    %       W - Weight matrix.
+    %       M - Input coupling matrix.
+    %       W - Binary weight matrix.
     %
     %   Outputs:
     %       obj_val - Objective function value.
@@ -177,13 +177,13 @@ function [G, grad_norm] = lm_step(U, lambda, M0, W)
     %
     %   [G, grad_norm] = LM_STEP(U, lambda, M0, W) computes the gradient
     %   and step direction for the given transformation matrix U, damping
-    %   parameter lambda, input matrix M0, and weight matrix W.
+    %   parameter lambda, input coupling matrix M0, and binary weight matrix W.
     %
     %   Inputs:
     %       U - Transformation matrix.
     %       lambda - Damping parameter.
-    %       M0 - Input matrix.
-    %       W - Weight matrix.
+    %       M0 - Input coupling matrix.
+    %       W - Binary weight matrix.
     %
     %   Outputs:
     %       G - Gradient matrix.
