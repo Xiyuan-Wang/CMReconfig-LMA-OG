@@ -13,7 +13,7 @@ opt.lossless = true;
 opt.rand_init = true;
 
 %% Perform coupling matrix reconfiguration
-[M, obj_val, Q] = leven_marq(M_can, W, opt);
+[M, obj_val, Q] = leven_marq(M0, W, opt);
 
 
 
