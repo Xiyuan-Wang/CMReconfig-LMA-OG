@@ -44,7 +44,7 @@ function [Mr, varargout] = leven_marq(M, W, varargin)
         retr = @(U, X) U*expm(-X);
       case 'cayley'
         retr = @(U, X) U * ((eye(size(X)) + X) \ (eye(size(X)) - X));
-      case 'qr'
+      case 'gs'
         retr = @(U, X) corth(U * (eye(size(X)) - X)); 
       case 'euclid'
         retr = @(U, X) U - X;
@@ -85,7 +85,8 @@ function [Mr, varargout] = leven_marq(M, W, varargin)
     % Levenberg-Marquardt iteration
     Lu = 11;
     Ld = 9;
-    while (iter <= option.max_iter) && (grad_norm > option.tolopt)
+    while (iter <= option.max_iter) && (grad_norm > option.tolopt) ...
+	  && (obj_values(iter) > option.tolfun)
         [G, grad_norm] = lm_step(U, lambda, M, W);    
         U_new = retr(U, G);    
         obj_value_new = obj(U_new, M, W);
@@ -110,14 +111,14 @@ function [Mr, varargout] = leven_marq(M, W, varargin)
 
         % Record timing if required
         if ~isinf(option.timing_interval) && (mod(iter, option.timing_interval)==0)
-            timing = [timing toc];
+            timing = [timing;iter toc];
             tic;
         end
 
         iter = iter + 1;
     end
 
-    stop_time = toc(start_time);
+    run_time = toc(start_time);
 
     % Print footer if verbose
     if option.verbose
@@ -147,7 +148,11 @@ function [Mr, varargout] = leven_marq(M, W, varargin)
     end
 
     if nargout > 3
-        varargout{3} = cumsum(timing)';
+      if ~isempty(timing)
+        varargout{3} = [timing(:,1) cumsum(timing(:,2))];
+      else
+	varargout{3} = [iter run_time];
+      end      
     end    
 end
 
@@ -210,7 +215,8 @@ function [G, grad_norm] = lm_step(U, lambda, M0, W)
 
     % Compute gradient and update step
     grad = Jc' * M(:);
-    g = pinv(Jc' * Jc + lambda * eye((m^2-m)/2)) * grad;
+		% g = pinv(Jc' * Jc + lambda * eye((m^2-m)/2)) * grad;
+    g = (Jc' * Jc + lambda * eye((m^2-m)/2)) \ grad;
 
     G = zeros(m);
     G(id_lo) = g;

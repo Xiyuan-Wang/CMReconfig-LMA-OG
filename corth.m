@@ -1,5 +1,5 @@
 function Q = corth(A)
-% CORTH Performs complex orthogonalization of the column vectors of A using the Gram-Schmidt method.
+% CORTH Performs real/complex orthogonalization of the column vectors of A using the Gram-Schmidt method.
 %   This function takes a matrix A and returns a matrix Q such that:
 %   - Q.' * Q = I, where I is the identity matrix.
 %
