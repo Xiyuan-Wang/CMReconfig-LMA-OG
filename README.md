@@ -12,7 +12,6 @@ This project implements the Levenberg-Marquardt optimization algorithm on the or
 6. `test_cm_reconfig.m`: Tests the coupling matrix reconfiguration algorithms.
 7. `reconfig_convergence.m`: Tests the performance of the algorithms in terms of convergence.
 8. `reconfig_success_count.m`: Tests the performance of the algorithms in terms of successful reconfigurations.
-9. `data`: The folder where the results of the testing code are stored.
 
 ## Usage
 
