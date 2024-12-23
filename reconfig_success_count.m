@@ -1,11 +1,12 @@
 clear % Clear all variables from the workspace
 close all % Close all open figure windows
 
-cm_file = 'cm/cm4'; % path to the coupling matrix file
+cm_dir = 'cm/'; % path to the coupling matrix file
+cm_file = 'cm4'; 
 algo = 'gen_iso_flow'; % Algorithm to use, can be "leven_marq" or "gen_iso_flow"
 
 %%
-load(cm_file) % Load the configuration matrix from the specified file
+load([cm_dir,cm_file]) % Load the configuration matrix from the specified file
 cm_reduce = str2func(algo); % Convert the algorithm name to a function handle
 
 % Set optimization options
@@ -33,7 +34,13 @@ for n_test = 1:N_test % Loop over the number of tests
     end    
 end
 
-%% Save the results to the data directory
-save('-v6', ['data/reconfig_success_count_', algo, '_', cm_file, '.mat'], ...
-     'N_test', 'run_times') 
+
+%% Save results to data directory
+data_dir = 'data/';
+if mkdir(data_dir)
+  save('-v6', [data_dir, 'reconfig_success_count_', ...
+	       algo, '_', cm_file, '.mat'], ...
+       'N_test', 'run_times')
+end
+
 

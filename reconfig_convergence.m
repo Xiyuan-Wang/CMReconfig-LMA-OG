@@ -1,11 +1,12 @@
 clear % Clear all variables from the workspace
 close all % Close all open figure windows
 
-cm_file = 'cm/cm4'; % Path to the coupling matrix file
+cm_dir = 'cm/'; % Path to the coupling matrix file
+cm_file = 'cm4'; 
 algo = 'gen_iso_flow'; % Algorithm to use, can be 'leven_marq' or 'gen_iso_flow'
 
 %%
-load(cm_file) % Load the configuration matrix from the specified file
+load([cm_dir,cm_file]) % Load the configuration matrix from the specified file
 cm_reduce = str2func(algo); % Convert the algorithm name to a function handle
 
 %% Set optimization options
@@ -39,8 +40,12 @@ end
 timings = [zeros(1,N_test); timings]; % Add zero timing for the initial point
 
 %% Save results to data directory
-% save('-v6', ['data/reconfig_converge_', algo, '_', cm_file, '.mat'], ...
-%     'timings','obj_vals','timing_iters')
+data_dir = 'data/';
+if mkdir(data_dir)
+  save('-v6', [data_dir, 'reconfig_converge_', algo,...
+	       '_', cm_file, '.mat'], ...
+       'timings','obj_vals','timing_iters');
+end
 
 %% Plot results
 blue_str = '#0095EF'; % Define a color for plotting
